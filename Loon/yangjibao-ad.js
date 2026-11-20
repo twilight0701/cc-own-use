@@ -1,16 +1,24 @@
-// 养基宝去开屏广告
-// 改写 /content/v1/ad/config 的响应：关掉开屏开关（splash.switch）
-// 并清空开屏广告位 ID（splash.ad_id），App 就不会再向穿山甲请求开屏创意。
-// 其它字段（信息流配置等）原样保留；解析失败时原样放行，不影响正常使用。
-let body = $response.body;
-if (body) {
+var body = $response && $response.body;
+
+if (!body) {
+  $done({});
+} else {
   try {
-    let obj = JSON.parse(body);
-    if (obj && obj.data && obj.data.splash) {
-      obj.data.splash.switch = false;
-      obj.data.splash.ad_id = "";
-      body = JSON.stringify(obj);
+    var payload = JSON.parse(body);
+    var data = payload && payload.data;
+
+    if (data && data.splash) {
+      data.splash.switch = false;
+      data.splash.ad_id = "";
     }
-  } catch (e) {}
+
+    if (data && data.feed && data.feed.discover) {
+      data.feed.discover.switch = false;
+      data.feed.discover.ad_id = "";
+    }
+
+    $done({ body: JSON.stringify(payload) });
+  } catch (error) {
+    $done({ body: body });
+  }
 }
-$done({ body });
