@@ -1,0 +1,16 @@
+#!name=养基宝去广告
+#!desc=拦截抓包中确认的养基宝广告配置、广告上报与试玩广告资源
+#!author=twilight0701
+#!homepage=https://github.com/twilight0701/cc-own-use
+
+[Rule]
+DOMAIN,guanggao-prod.cn-shanghai.log.aliyuncs.com,REJECT
+
+[URL Rewrite]
+^https?:\/\/app-api\.yangjibao\.com\/content\/v1\/ad\/config(?:\?.*)?$ url reject
+^https?:\/\/app-api\.yangjibao\.com\/content\/v1\/ad\/events(?:\?.*)?$ url reject
+^https?:\/\/app-api\.yangjibao\.com\/unify_ad(?:\?.*)?$ url reject
+^https?:\/\/lf-cdn-tos\.bytescm\.com\/obj\/static\/ad\/play-comp\/playable-component-sdk\/package\.ugen\.json(?:\?.*)?$ url reject
+
+[MITM]
+hostname = %APPEND% app-api.yangjibao.com, lf-cdn-tos.bytescm.com
